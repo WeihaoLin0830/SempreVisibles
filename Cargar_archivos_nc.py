@@ -4,7 +4,7 @@ import xarray as xr  # Más eficiente que netCDF4
 import pandas as pd  # Para convertir a CSV
 
 # Ruta de la carpeta donde se encuentran los archivos .nc
-directorio = r'../Dades/DADES_CALIOPE_buenos/NO2'
+directorio = r'C:/Users/jiahu/OneDrive/Escritorio/AI3/Bitsxm/Dades/CALIOPE/NO2/'
 
 def obtenir_dadesCALIOPE(directorio):
     # Lista para almacenar todos los DataFrames generados
@@ -14,7 +14,7 @@ def obtenir_dadesCALIOPE(directorio):
         
             # Obtener la mitad de los archivos
               # División entera para obtener la mitad
-    archivos_a_recorrer = archivos[:mitad]
+    archivos_a_recorrer = archivos[:5]
         
     # Recorre todos los archivos .nc de la carpeta
     for archivo in archivos_a_recorrer:
@@ -53,7 +53,7 @@ def obtenir_dadesCALIOPE(directorio):
         
         # 8. Concatenar todos los DataFrames acumulados
     if lista_dataframes:
-        df_CALIOPE = pd.concat(lista_dataframes, ignore_index=True, join='outer')
+        df_CALIOPE = pd.concat(lista_dataframes, ignore_index=True, join='outer', axis=0)
         print(f"Concatenación final exitosa. Total de filas: {df_CALIOPE.shape[0]}")
         return df_CALIOPE
     else:
@@ -61,8 +61,9 @@ def obtenir_dadesCALIOPE(directorio):
         return pd.DataFrame()# Retorna un DataFrame vacío si no hay archivos .nc válidos
 
 # Ejecutar la función para procesar los archivos y concatenar
-sconcno2_2023122600 = obtenir_dadesCALIOPE(directorio)
+datos_caliope = obtenir_dadesCALIOPE(directorio)
 
 # Mostrar las columnas del DataFrame concatenado
 print("Columnas del DataFrame concatenado:")
-print(sconcno2_2023122600.columns)
+print(datos_caliope.columns)
+print(datos_caliope.shape)
