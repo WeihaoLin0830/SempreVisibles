@@ -4,7 +4,7 @@ import xarray as xr  # Más eficiente que netCDF4
 import pandas as pd  # Para convertir a CSV
 
 # Ruta de la carpeta donde se encuentran los archivos .nc
-directorio = r'C:/Users/jiahu/OneDrive/Escritorio/AI3/Bitsxm/Dades/CALIOPE/NO2'
+directorio = r'../Dades/DADES_CALIOPE_buenos/NO2'
 
 # Recorre todos los archivos .nc de la carpeta
 for archivo in os.listdir(directorio):
@@ -33,7 +33,7 @@ for archivo in os.listdir(directorio):
         except Exception as e:
             print(f"Error al procesar {archivo}: {e}")
 
-print(sconcno2_2023122600.nc).columns
+#print(sconcno2_2023122600.nc).columns
 # TO DO:
 # - Filtrar las variables que no se necesitan
 # - Convertir time a datetime
