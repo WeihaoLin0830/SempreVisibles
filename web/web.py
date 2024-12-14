@@ -5,9 +5,15 @@ from geopy.geocoders import Nominatim
 import geopandas as gpd
 import branca.colormap as cm
 from folium.plugins import HeatMap, MarkerCluster
+import openrouteservice as ors
+from folium import plugins
 
 # Set Mapbox access token (replace with your token)
 mapbox_token = "your_mapbox_token"
+
+# Add OpenRouteService client (get API key from openrouteservice.org)
+ors_key = "your_ors_key"
+ors_client = ors.Client(key=ors_key)
 
 # Page configuration
 st.set_page_config(page_title="Interactive Map", layout="wide")
@@ -16,21 +22,64 @@ st.title("🌍 Interactive Map Explorer")
 # Initialize geocoder
 geolocator = Nominatim(user_agent="streamlit-maps")
 
+# Sidebar configuration
+st.sidebar.markdown("<h1>Control Panel</h2>", unsafe_allow_html=True)
+
+# Load air quality data
+# gdf = gpd.read_file("data/air_quality/air_quality.shp")
+
+
 # Catalan cities data
 cities = {
     "Barcelona": [41.3851, 2.1734],
     "Girona": [41.9842, 2.8237],
     "Lleida": [41.6176, 0.6200],
-    "Tarragona": [41.1189, 1.2445]
+    "Tarragona": [41.1189, 1.2445],
+    "Other": []
 }
+
+# Add route selection to sidebar
+st.sidebar.header("Route Planning")
+start_city = st.sidebar.selectbox("Start city:", list(cities.keys()))
+end_city = st.sidebar.selectbox("End city:", list(cities.keys()))
+
+if st.sidebar.button("Calculate Route"):
+    try:
+        # Get coordinates for route
+        coords = [[cities[start_city][1], cities[start_city][0]], 
+                 [cities[end_city][1], cities[end_city][0]]]
+        
+        # Get route from OpenRouteService
+        route = ors_client.directions(
+            coordinates=coords,
+            profile='driving-car',
+            format='geojson'
+        )
+
+        # Add route to map
+        folium.GeoJson(
+            route,
+            name='route',
+            style_function=lambda x: {'color': 'red', 'weight': 2}
+        ).add_to(m)
+
+        # Add distance and duration info
+        distance = route['features'][0]['properties']['segments'][0]['distance']
+        duration = route['features'][0]['properties']['segments'][0]['duration']
+        st.sidebar.info(f"Distance: {distance/1000:.1f} km")
+        st.sidebar.info(f"Duration: {duration/60:.0f} min")
+
+    except Exception as e:
+        st.sidebar.error(f"Error calculating route: {e}")
 
 # Sidebar configuration
 st.sidebar.header("Search Options")
-selected_city = st.sidebar.selectbox("Select a city:", list(cities.keys()))
-custom_location = st.sidebar.text_input("📍 Search custom location:", "")
+custom_location = st.sidebar.selectbox("Select a city:", list(cities.keys()))
+if custom_location == "Other":
+    custom_location = st.sidebar.text_input("Enter a location:")
 
 # Initialize map center and zoom
-map_center = cities[selected_city]
+map_center = cities[custom_location] 
 zoom = 12
 
 # Handle custom location search
