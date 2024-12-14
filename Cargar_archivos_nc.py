@@ -4,7 +4,7 @@ import xarray as xr  # Más eficiente que netCDF4
 import pandas as pd  # Para convertir a CSV
 
 # Ruta de la carpeta donde se encuentran los archivos .nc
-directorio = r'C:/Users/jiahu/OneDrive/Escritorio/AI3/Bitsxm/Dades/CALIOPE/NO2'
+directorio = r'../Dades/DADES_CALIOPE_buenos/NO2'
 
 def obtenir_dadesCALIOPE(directorio):
     # Lista para almacenar todos los DataFrames generados
