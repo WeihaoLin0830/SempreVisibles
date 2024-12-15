@@ -1,0 +1,23 @@
+{
+    "type": "FeatureCollection",
+    "name": "def_domini_tarragona",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [ 353000, 4563000 ], 
+              [ 360000, 4563000 ], 
+              [ 360000, 4558000 ], 
+              [ 353000, 4558000 ], 
+              [ 353000, 4563000 ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+  
