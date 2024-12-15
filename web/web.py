@@ -43,8 +43,8 @@ cities_coords = {
 # Sidebar configuration
 st.sidebar.markdown("<h1>Control Panel</h2>", unsafe_allow_html=True)
 
-# Load air quality data
-# gdf = gpd.read_file("data/air_quality/air_quality.shp")
+# # Load air quality data
+# # gdf = gpd.read_file("data/air_quality/air_quality.shp")
 
 # Sidebar configuration
 st.sidebar.header("Search Options")
@@ -88,29 +88,29 @@ try:
     folium.TileLayer('openstreetmap', name='OpenStreetMap').add_to(m)
     folium.TileLayer('cartodbpositron', name='CartoDB Positron').add_to(m)
     
-    # Create marker cluster
-    marker_cluster = MarkerCluster().add_to(m)
+#     # Create marker cluster
+#     marker_cluster = MarkerCluster().add_to(m)
     
-    # Add city markers to cluster
-    for city, coords in cities_coords.items():
-        folium.Marker(
-            location=coords,
-            popup=f"<strong>{city}</strong>",
-            tooltip=city,
-            icon=folium.Icon(color="red", icon="info-sign"),
-        ).add_to(marker_cluster)
+#     # Add city markers to cluster
+#     for city, coords in cities_coords.items():
+#         folium.Marker(
+#             location=coords,
+#             popup=f"<strong>{city}</strong>",
+#             tooltip=city,
+#             icon=folium.Icon(color="red", icon="info-sign"),
+#         ).add_to(marker_cluster)
 
-    # Check if location exists before adding marker
-    if 'location' in locals() and location is not None:
-        try:
-            folium.Marker(
-                location=[location.latitude, location.longitude],
-                popup=f"<strong>{location.address}</strong>",
-                tooltip="Searched location",
-                icon=folium.Icon(color="blue", icon="info-sign")
-            ).add_to(m)
-        except Exception as marker_error:
-            st.error(f"Error adding marker: {marker_error}")
+#     # Check if location exists before adding marker
+#     if 'location' in locals() and location is not None:
+#         try:
+#             folium.Marker(
+#                 location=[location.latitude, location.longitude],
+#                 popup=f"<strong>{location.address}</strong>",
+#                 tooltip="Searched location",
+#                 icon=folium.Icon(color="blue", icon="info-sign")
+#             ).add_to(m)
+#         except Exception as marker_error:
+#             st.error(f"Error adding marker: {marker_error}")
     
     # Add layer control
     folium.LayerControl().add_to(m)
@@ -126,14 +126,14 @@ try:
             returned_objects=["last_clicked"]
         )
     
-    # Add instructions in sidebar
-    st.sidebar.markdown("""
-    ### Instructions:
-    - 🌍 Select a predefined city or
-    - 🔎 Search for any location
-    - 🗺️ Use map controls to change views
-    - 📍 Click markers for more info
-    """)
+#     # Add instructions in sidebar
+#     st.sidebar.markdown("""
+#     ### Instructions:
+#     - 🌍 Select a predefined city or
+#     - 🔎 Search for any location
+#     - 🗺️ Use map controls to change views
+#     - 📍 Click markers for more info
+#     """)
 
 except Exception as e:
     st.error(f"Error creating map: {e}")
@@ -206,7 +206,10 @@ if st.sidebar.button("Find Route"):
             ).add_to(m)
             
             # Display map
-            folium_static(m, width=None, height=600)
+            st.write("Route found!")
+            map_container = st.container()
+            with map_container:
+                folium_static(m, width=None, height=600)
             
         else:
             st.error("Could not find one or both locations")
