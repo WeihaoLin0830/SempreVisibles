@@ -23,6 +23,18 @@ ors_client = ors.Client(key="5b3ce3597851110001cf6248559770e6473e4b08a048b18d773
 st.set_page_config(page_title="Route Finder", layout="wide")
 st.title("🗺️ Route Finder")
 
+# Display predicted NO2 map
+st.header("Predicted NO2 Levels")
+
+# Assuming you have an HTML file for the NO2 map
+predicted_no2_map_html = "predicted_no2_map.html"
+
+# Read the HTML content
+with open(predicted_no2_map_html, 'r') as file:
+    predicted_no2_map = file.read()
+
+st.components.v1.html(predicted_no2_map, height=600)
+
 # Initialize default map in Barcelona
 map_center = [41.3851, 2.1734]  # Barcelona coordinates
 zoom = 10
