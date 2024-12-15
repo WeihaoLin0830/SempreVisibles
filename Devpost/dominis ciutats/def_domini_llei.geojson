@@ -1,0 +1,22 @@
+{
+  "type": "FeatureCollection",
+  "name": "def_domini_lleida",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [ 314446.35, 4612514.83 ], 
+            [ 320462.02, 4612337.19 ], 
+            [ 320612.64, 4607502.82 ], 
+            [ 314005.74, 4607584.85 ], 
+            [ 314446.35, 4612514.83 ]
+          ]
+        ]
+      }
+    }
+  ]
+}
