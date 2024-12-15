@@ -1,7 +1,7 @@
 import math 
 import streamlit as st
 import folium
-from streamlit_folium import st_folium
+from streamlit_folium import st_folium, folium_static
 from geopy.geocoders import Nominatim
 import geopandas as gpd
 import branca.colormap as cm
@@ -11,27 +11,24 @@ from folium import plugins
 import osmnx as ox
 import networkx as nx
 import geopy
+from geopy.exc import GeocoderTimedOut
 
 # Set Mapbox access token (replace with your token)
 mapbox_token = "your_mapbox_token"
-
-# Add OpenRouteService client (get API key from openrouteservice.org)
-ors_key = "your_ors_key"
-ors_client = ors.Client(key=ors_key)
 
 # Test with free API key
 ors_client = ors.Client(key="5b3ce3597851110001cf6248559770e6473e4b08a048b18d77335d77")
 
 # Page configuration
-st.set_page_config(page_title="Interactive Map", layout="wide")
-st.title("🌍 Interactive Map Explorer")
+st.set_page_config(page_title="Route Finder", layout="wide")
+st.title("🗺️ Route Finder")
 
 # Initialize default map in Barcelona
 map_center = [41.3851, 2.1734]  # Barcelona coordinates
 zoom = 10
 
 # Initialize geocoder
-geolocator = Nominatim(user_agent="streamlit-maps")
+geolocator = Nominatim(user_agent="route_finder_app")
 
 # Catalan cities data
 cities = ["Barcelona", "Girona", "Lleida", "Tarragona", "Other"]
@@ -143,27 +140,22 @@ except Exception as e:
     st.info("Please try refreshing the page")
 
 
-# Add route selection to sidebar
-st.sidebar.header("Route Planning")
-start_city = st.sidebar.text_input("Start city:")
-end_city = st.sidebar.text_input("End city:")
 
-if st.sidebar.button("Calculate Route"):
+# Sidebar inputs
+st.sidebar.header("Route Options")
+start_location = st.sidebar.text_input("Start Location", "Barcelona")
+end_location = st.sidebar.text_input("End Location", "Hospitalet del Llobregat")
+
+if st.sidebar.button("Find Route"):
     try:
-        # Get coordinates for route
-        location = geolocator.geocode(start_city)
-        end_location = geolocator.geocode(end_city)
-
-        if location and end_location:
-            st.sidebar.success(f"Location found: {location.address}")
-            st.sidebar.success(f"End location found: {end_location.address}")
-            average_coords = [(location.latitude + end_location.latitude) / 2, (location.longitude + end_location.longitude) / 2]
-            map_center = [average_coords[0], average_coords[1]]
-            zoom = 15
-
+        # Get coordinates
+        start_coords = geolocator.geocode(start_location)
+        end_coords = geolocator.geocode(end_location)
+        
+        if start_coords and end_coords:
             # Get street network
             G = ox.graph_from_point(
-                (location.latitude, location.longitude),
+                (start_coords.latitude, start_coords.longitude),
                 dist=10000,
                 network_type="drive"
             )
@@ -171,13 +163,13 @@ if st.sidebar.button("Calculate Route"):
             # Find nearest nodes
             start_node = ox.distance.nearest_nodes(
                 G, 
-                location.longitude,
-                location.latitude
+                start_coords.longitude,
+                start_coords.latitude
             )
             end_node = ox.distance.nearest_nodes(
                 G,
-                end_location.longitude,
-                end_location.latitude
+                end_coords.longitude,
+                end_coords.latitude
             )
             
             # Calculate route
@@ -185,24 +177,24 @@ if st.sidebar.button("Calculate Route"):
             
             # Create map
             m = folium.Map(
-                location=[(location.latitude + end_location.latitude)/2,
-                         (location.longitude + end_location.longitude)/2],
+                location=[(start_coords.latitude + end_coords.latitude)/2,
+                         (start_coords.longitude + end_coords.longitude)/2],
                 zoom_start=10
             )
             
             # Add markers
             folium.Marker(
-                [location.latitude, location.longitude],
+                [start_coords.latitude, start_coords.longitude],
                 popup='Start',
                 icon=folium.Icon(color='green')
             ).add_to(m)
             
             folium.Marker(
-                [end_location.latitude, end_location.longitude],
+                [end_coords.latitude, end_coords.longitude],
                 popup='End',
                 icon=folium.Icon(color='red')
             ).add_to(m)
-
+            
             # Add route line
             route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) 
                           for node in route]
@@ -214,59 +206,11 @@ if st.sidebar.button("Calculate Route"):
             ).add_to(m)
             
             # Display map
-            st_folium(m)
-
-        else:
-            st.sidebar.error("Location not found. Please try again.")
-        
-        # # Get route from OpenRouteService
-        # route = ors_client.directions(
-        #     coordinates=[[location.longitude, location.latitude], [end_location.longitude, end_location.latitude]],
-        #     profile='driving-car',
-        #     format='geojson'
-        # )
-
-        # # Add route to map
-        # folium.GeoJson(
-        #     route,
-        #     name='route',
-        #     style_function=lambda x: {'color': 'red', 'weight': 2}
-        # ).add_to(m)
-
-        # st_folium(m)
-
-        # # Display map with route
-        # st.write("Displaying map with route...")
-        # map_container = st.container()
-
-        # with map_container:
-        #     st_folium(
-        #     m,
-        #     width=None,  # Let Streamlit handle responsive width
-        #     height=600,
-        #     returned_objects=["last_clicked"]
-        #     )
-
-        # # Add route line
-        # route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) 
-        #               for node in route]
-        # folium.PolyLine(
-        #     route_coords,
-        #     weight=2,
-        #     color='blue',
-        #     opacity=0.8
-        # ).add_to(m)
+            folium_static(m, width=None, height=600)
             
-        # # Display map
-        # st_folium(m)    
-
-        # Add distance and duration info
-        distance = route['features'][0]['properties']['segments'][0]['distance']
-        duration = route['features'][0]['properties']['segments'][0]['duration']
-
-        st.sidebar.info(f"Distance: {distance/1000:.1f} km")
-        st.sidebar.info(f"Duration: {duration/60:.0f} min")
-        st.sidebar.success("Route calculated successfully!")
-
+        else:
+            st.error("Could not find one or both locations")
+            
     except Exception as e:
-        st.sidebar.error(f"Error calculating route: {e}")
+        st.error(f"Error finding route: {str(e)}")
+
