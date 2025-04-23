@@ -1,13 +1,3 @@
-# AirQualityMap_Bits
-Project developed by Sergi Flores, Clàudia Gallego, Weihao Lin and Jiahui Chen for the BitsxLaMarató Hackathon, a really special hackathon due to its charity nature. 
-
-## Random Forest Regressor
-Mapa d'alta resolució de la qualitat d'aire en Catalunya. #BitsxLaMarató 2024
-
-Our solution focused on interpolating the points we aimed to predict using IDW (Inverse Distance Weighting) combined with the 1 km resolution data from the CALIOPE system. Next, we trained a model using air quality station data and their nearest roads to refine the results based on road-specific characteristics. Additionally, we developed a temporal model to adjust the outcomes according to the desired hour and day and created a simple website that provides air quality forecasts for the main cities in Catalonia.
-
-
-
 # AirQualityMap: High-Resolution Air Quality Forecasting for Catalonia
 
 ![Catalonia Air Quality Map](/img/photo1.jpg)
@@ -42,12 +32,11 @@ AirQualityMap transforms low-resolution (1km×1km) air quality predictions from 
 - Trained a **Random Forest Regressor** to adjust pollution estimates based on:
   - Road width and type
   - Traffic intensity
-  - Surrounding building density
   - Distance to major pollution sources
 - Performed feature importance analysis to identify key pollution predictors
 
 #### 3. Temporal Adjustment Layer
-- Developed time-series models to account for:
+- Trained a **LightGBM** model to account for:
   - Hourly pollution variations (rush hour patterns)
   - Daily patterns (weekday vs. weekend differences)
   - Seasonal trends
@@ -99,9 +88,3 @@ Special thanks to:
 - Barcelona Supercomputing Center for providing the CALIOPE system data and expert guidance
 - BitsxLaMarató organization team for creating this meaningful hackathon experience
 - La Marató de TV3 for their ongoing work in the fight against respiratory diseases
-
-## Project Relevance
-
-AirQualityMap demonstrates how advanced data science techniques can transform environmental monitoring, making invisible pollution visible and actionable for everyday citizens across Catalonia.
-
-#BitsxLaMarató #AirQuality #DataScience #MachineLearning #EnvironmentalMonitoring
