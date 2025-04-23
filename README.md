@@ -1,16 +1,16 @@
 # AirQualityMap: High-Resolution Air Quality Forecasting for Catalonia
 
-<img src="/img/photo1.jpg" alt="Catalonia Air Quality Map" width="400"/>
-
 ## 🏆 BSC Challenge Winners - BitsxLaMarató Hackathon
 
-AirQualityMap is a sophisticated air quality prediction system that downscales regional pollution data to street-level resolution across Catalonia, developed for the "Fem visible l'invisible!" challenge by Barcelona Supercomputing Center.
+AirQualityMap is an air quality prediction system that downscales regional pollution data to street-level resolution across Catalonia, developed for the "Fem visible l'invisible!" challenge by Barcelona Supercomputing Center.
 
 <img src="/img/photo1.jpg" alt="Catalonia Air Quality Map" width="400"/>
 
 ## Project Overview
 
 AirQualityMap transforms low-resolution (1km×1km) air quality predictions from the CALIOPE system into highly detailed street-level pollution maps. By combining advanced spatial interpolation techniques with machine learning models that incorporate traffic patterns and local measurements, we provide citizens with accurate, hyper-local air quality forecasts.
+
+<img src="/img/photo2.jpg" alt="Catalonia Air Quality Map" width="400"/>
 
 ## Technical Approach
 
