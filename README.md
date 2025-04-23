@@ -10,7 +10,7 @@ AirQualityMap is an air quality prediction system that downscales regional pollu
 
 AirQualityMap transforms low-resolution (1km×1km) air quality predictions from the CALIOPE system into highly detailed street-level pollution maps. By combining advanced spatial interpolation techniques with machine learning models that incorporate traffic patterns and local measurements, we provide citizens with accurate, hyper-local air quality forecasts.
 
-<img src="/img/photo2.jpg" alt="Catalonia Air Quality Map" width="400"/>
+<img src="/img/photo2.jpg" alt="Catalonia Air Quality Map" width="700"/>
 
 ## Technical Approach
 
